@@ -5,7 +5,7 @@ import java.sql.*;
 
 
 public class EmployeeCRUD {
-    private String jdbcURL="jdbc:mysql://localhost:3306/finalproject";
+    private String jdbcURL="jdbc:mysql://localhost:3306/cis144sp";
     private String jdbcUsername="root";
     private String jdbcPassword="";
     
@@ -63,20 +63,21 @@ public class EmployeeCRUD {
         (
          Connection conn = getConnection();
          PreparedStatement ps = conn.prepareStatement(SELECT_EMPLOYEE_BY_ID);
+         
         )
         {
             ps.setInt(1, empid);
             ResultSet rs = ps.executeQuery();
-            if(rs.next())
+            while(rs.next())
             {
-                String Lname = rs.getString(2);
-                String Fname = rs.getString(3);
-                String Address1 = rs.getString(4);
-                String Address2 = rs.getString(5);
-                String City = rs.getString(6);
-                String State = rs.getString(7);
-                String DOB = rs.getString(8);
-                double Salary = rs.getDouble(9);
+                String Lname = rs.getString("EmpLname");
+                String Fname = rs.getString("EmpFname");
+                String Address1 = rs.getString("EmpAddress1");
+                String Address2 = rs.getString("EmpAddress2");
+                String City = rs.getString("EmpCity");
+                String State = rs.getString("EmpState");
+                String DOB = rs.getString("EmpDOB");
+                double Salary = rs.getDouble("EmpBaseSalary");
                 employee = new Employee(empid, Lname, Fname, Address1, Address2, City, State, DOB, Salary);
                 
             }
