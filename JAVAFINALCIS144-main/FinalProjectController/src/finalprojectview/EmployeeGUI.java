@@ -270,11 +270,13 @@ public class EmployeeGUI extends JFrame {
         
         btnDelete = new JButton("Delete");
         btnDelete.addActionListener(new Delete());
+        btnDelete.setEnabled(false);
         btnDelete.setBounds(175, 390, 80, 25);
         selectPanel.add(btnDelete);
         
         btnClear2 = new JButton("Clear");
         btnClear2.addActionListener(new Clear());
+        btnClear2.setEnabled(false);
         btnClear2.setBounds(270, 390, 80, 25);
         selectPanel.add(btnClear2);
         
@@ -314,6 +316,8 @@ public class EmployeeGUI extends JFrame {
             
             try{
                crud.insertEmployee(emp);
+               
+               JOptionPane.showMessageDialog(null, "New Employee saved Successfully !!");
             }
             catch(Exception ex){
                 ex.printStackTrace();
@@ -326,17 +330,34 @@ public class EmployeeGUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            
-            txtLname.setText("");
-            txtFname.setText("");            
-            txtAddress1.setText("");         
-            txtAddress2.setText("");         
-            txtCity.setText("");
-            txtState.setText("");            
-            txtDOB.setText("");
-            txtSalary.setText("");       
+            clearFields();
         }
     
+    }
+    
+    
+    public void clearFields(){
+        // clear insert fields 
+        txtLname.setText("");
+        txtFname.setText("");            
+        txtAddress1.setText("");         
+        txtAddress2.setText("");         
+        txtCity.setText("");
+        txtState.setText("");            
+        txtDOB.setText("");
+        txtSalary.setText("");    
+        // clear the search and delete fields 
+        txtID.setText("");
+        txtLname2.setText("");
+        txtFname2.setText("");            
+        txtAddress12.setText("");         
+        txtAddress22.setText("");         
+        txtCity2.setText("");
+        txtState2.setText("");            
+        txtDOB2.setText("");
+        txtSalary2.setText("");
+        btnDelete.setEnabled(false);
+        btnClear2.setEnabled(false);
     }
     
     
@@ -344,24 +365,36 @@ public class EmployeeGUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("Searchin ...");
-            int empId = Integer.parseInt(txtID.getText());
-            emp2 = crud.selectEmployee(empId);
-            if (emp2 != null){
-                txtLname2.setText(emp2.getLname());
-                txtFname2.setText(emp2.getFname());            
-                txtAddress12.setText(emp2.getAddress1());         
-                txtAddress22.setText(emp2.getAddress2());         
-                txtCity2.setText(emp2.getCity());
-                txtState2.setText(emp2.getState());            
-                txtDOB2.setText(emp2.getDOB());
-                txtSalary2.setText(""+emp2.getSalary()); 
+            if (!txtID.getText().isEmpty()){
+                try{
+                    int empId = Integer.parseInt(txtID.getText());
+                    emp2 = crud.selectEmployee(empId);
+                    if (emp2 != null){
+                        txtLname2.setText(emp2.getLname());
+                        txtFname2.setText(emp2.getFname());            
+                        txtAddress12.setText(emp2.getAddress1());         
+                        txtAddress22.setText(emp2.getAddress2());         
+                        txtCity2.setText(emp2.getCity());
+                        txtState2.setText(emp2.getState());            
+                        txtDOB2.setText(emp2.getDOB());
+                        txtSalary2.setText(""+emp2.getSalary()); 
+                        txtID.requestFocus();
+                        btnDelete.setEnabled(true);
+                        btnClear2.setEnabled(true);
+                    }
+                    else{
+                        txtID.setText("");
+                        txtID.requestFocus();
+                        JOptionPane.showMessageDialog(null, "Employee not found !!");
+                    }
+                }
+                catch(Exception ex){
+                        JOptionPane.showMessageDialog(null, "ID must be a number, please Try again  !!");
+                }
                 
             }
-            else{
-                txtID.setText("");
-                txtID.requestFocus();
-                JOptionPane.showMessageDialog(null, "Employee not found !!");
+            else {
+                JOptionPane.showMessageDialog(null, "ID field is empty !!");
             }
         }
     
@@ -371,8 +404,21 @@ public class EmployeeGUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            
-            
+            boolean x = false;
+            try{
+                x = crud.deleteEmployee(emp2.getId());
+                
+            }
+            catch(Exception ex){
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+            if(x){
+                JOptionPane.showMessageDialog(null, "You just deleted the employee # "+emp2.getId());
+                clearFields();
+            }
+            else{
+                JOptionPane.showMessageDialog(null, "UNSUCCESSFUL DELETE");
+            }
         }
     
     }
